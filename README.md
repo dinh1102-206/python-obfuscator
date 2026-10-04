@@ -1,95 +1,72 @@
-# Python Obfuscator & Protector
+# 🐾 WHISCAT OBFUSCATOR v9.0 🐾
 
-Một công cụ làm mờ (Obfuscator) và bảo vệ mã nguồn Python đa tầng mạnh mẽ, giúp chống dịch ngược (decompile), chống dịch ngược tĩnh và động, chống hooking và dump bộ nhớ cơ bản.
-
----
-
-## 🚀 Tính năng nổi bật (Features)
-
-1. **AST Transformation (Biến đổi cây cú pháp)**:
-   - **Dynamic String Encryption**: Mã hóa toàn bộ chuỗi ký tự bằng thuật toán mã hóa động đa khóa (Rolling XOR + Salt + Shifting). Tạo decryptor ngẫu nhiên tại runtime.
-   - **Number & Constant Obfuscation**: Tách các giá trị số và hằng số thành các biểu thức số học và bitwise phức tạp (`^`, `&`, `|`, `+`, `-`).
-   - **Name Mangling**: Đổi tên các biến nội bộ thành chuỗi hex/nhận dạng ngẫu nhiên (`_var_0x...`), đồng thời giữ an toàn tuyệt đối cho methods, imports và builtins.
-   - **Control Flow Flattening (Làm phẳng luồng điều khiển)**: Biến đổi các khối lệnh tuần tự thành các máy trạng thái (State Machine Dispatcher) với thứ tự nhánh bị xáo trộn ngẫu nhiên.
-   - **Opaque Predicates & Dead Code**: Chèn các khối rẽ nhánh giả với điều kiện luôn sai nhưng tĩnh học không thể đoán được.
-
-2. **Polymorphic Bytecode Packing**:
-   - Biên dịch AST sang mã bytecode (`marshal`).
-   - Nén luồng dữ liệu ở mức tối đa (`zlib level 9`).
-   - Mã hóa bytecode bằng khóa ngẫu nhiên sinh mới ở mỗi lần chạy.
-   - Đóng gói trong một Loader tự giải mã đa hình (Polymorphic Self-Executing Loader).
-
-3. **Anti-Analysis & Anti-Hooking Guard**:
-   - Phát hiện và vô hiệu hóa Tracing (`sys.settrace`, `sys.gettrace`).
-   - Phát hiện Monkey-Patching / Hooking trên các hàm built-in nhạy cảm (`exec`, `eval`, `compile`, `print`).
-   - Tự động dọn dẹp frame và loader trong bộ nhớ ngay sau khi thực thi (`frame cleanup`).
+Một công cụ làm mờ (Obfuscator) và bảo vệ mã nguồn Python toàn diện, hội tụ các kỹ thuật hàng đầu từ Shadow, Tsunami, Pymeomeo với giao diện **Gradient Menu** tương tác đẹp mắt.
 
 ---
 
-## 🛠️ Hướng dẫn sử dụng (Usage)
+## 🚀 Tính năng chính (Key Features)
 
-### 1. Sử dụng qua dòng lệnh (CLI)
+1. **🎨 Interactive Gradient Menu**:
+   - Giao diện console tương tác mượt mà với dải màu chuyển động ANSI TrueColor/pystyle.
+   - Hỗ trợ cả 2 cách dùng: Chạy tương tác (Interactive menu) hoặc dòng lệnh (CLI).
 
-Cực kỳ đơn giản, chỉ cần chỉ định file `.py` cần làm mờ:
+2. **⚡ AST Transformation & Decompiler Bomb**:
+   - **Anti-PyCDC Decompiler Bomb**: Chèn bẫy làm sập trực tiếp engine dịch ngược C++ của `pycdc` (`1/int(0)`).
+   - **Dynamic String Encryption**: Mã hóa chuỗi ký tự bằng thuật toán mã hóa động đa khóa (Rolling XOR + Salt + Shifting), tự động sinh decryptor tại runtime. Hỗ trợ chuẩn xác cả f-strings (`JoinedStr`).
+   - **Number & Constant Splitting**: Tách số và hằng số thành các biểu thức bitwise và số học phức tạp.
+   - **Control Flow Flattening (CFF)**: Chuyển các khối lệnh tuần tự thành các máy trạng thái (State Machine Dispatcher) với thứ tự nhánh bị xáo trộn ngẫu nhiên.
+   - **Variable Name Mangling**: Đổi tên biến sang mã Hex hoặc chữ tượng hình CJK Unicode (`0x4E00` - `0x9FA5`), bảo toàn 100% logic của built-in, method và import.
 
+3. **🔒 Memory & Debugger Guard (CPython Level)**:
+   - **CPython Memory Hook Detection**: Kiểm tra trực tiếp trong RAM thông qua `ctypes.pythonapi` 8 bytes prologue của hàm `PyEval_EvalCode` để phát hiện breakpoint phần cứng/phần mềm (`0xCC` INT 3).
+   - **Builtin Integrity Guard**: Kiểm tra xem các hàm nhạy cảm `exec`, `eval`, `compile` có bị hook hoặc monkey-patch không.
+   - **Anti-Tracing & Anti-Debugger**: Phát hiện `gettrace`, chặn `settrace`, vô hiệu hóa debugger Windows API (`IsDebuggerPresent`, `CheckRemoteDebuggerPresent`).
+   - Tự động dọn dẹp frame và loader trong bộ nhớ ngay sau khi thực thi.
+
+4. **🚀 4-Tier Polymorphic Packing**:
+   - Nén bytecode qua 4 tầng: `BZ2` + `LZMA` + `ZLIB` + `Base85`.
+   - Mã hóa luồng Rolling Stream Cipher với seed, key và salt ngẫu nhiên mỗi lần obf.
+   - Đóng gói trong loader tự giải mã đa hình (Polymorphic Self-Executing Loader).
+
+5. **📂 Batch Folder Obfuscation**:
+   - Hỗ trợ kéo thả hoặc nhập đường dẫn nguyên cả thư mục dự án -> Tự động xử lý và bảo vệ toàn bộ cây thư mục.
+
+---
+
+## 💻 Cách sử dụng (Usage)
+
+### 1. Chạy Menu tương tác (Khuyên dùng)
+
+Chỉ cần gõ:
 ```bash
-# Obfuscate với mức độ mặc định (HIGH)
-python main.py -i your_script.py -o your_script_obf.py
-
-# Obfuscate với mức độ tối đa (EXTREME)
-python main.py -i your_script.py -o your_script_obf.py -l extreme
+python main.py
+```
+Menu tương tác với dải màu Gradient sẽ xuất hiện:
+```text
+    [1] ⚡ Quick Obfuscate (Mã hóa nhanh 1 File Python)
+    [2] 🥷 Stealth Matrix Mode (Chế độ ẩn danh 2D Matrix & CJK)
+    [3] 🛡️ Whiscat Ultimate Armor (Full Anti-Decompile + Memory Guard + 4-Tier Packing)
+    [4] 📂 Batch Obfuscate Project (Bảo vệ toàn bộ Folder / Dự án)
+    [5] 🧪 Run Self-Diagnostic Tests (Chạy kiểm tra tính đúng đắn)
+    [0] 🚪 Thoát
 ```
 
-#### Các mức độ (Presets):
-* `low`: Mã hóa chuỗi + Đóng gói Bytecode đa hình.
-* `medium`: Mã hóa chuỗi + Biến đổi số + Đổi tên biến + Anti-Analysis + Đóng gói Bytecode.
-* `high` *(mặc định)*: Toàn bộ tính năng Medium + Control Flow Flattening (Làm phẳng luồng thực thi).
-* `extreme`: Toàn bộ tính năng High + Nhiều vòng (multi-round) biến đổi AST.
-
-#### Các cờ tùy chỉnh khác:
-* `--no-strings`: Tắt mã hóa chuỗi.
-* `--no-numbers`: Tắt làm mờ số học.
-* `--no-mangling`: Tắt đổi tên biến.
-* `--no-flatten`: Tắt làm phẳng luồng điều khiển.
-* `--no-anti-debug`: Tắt bảo vệ chống debugger/tracing.
-* `--no-pack`: Chỉ xuất mã nguồn AST đã làm mờ, không đóng gói bytecode.
-
----
-
-### 2. Chạy file đã Obfuscate
-
-Người dùng cuối chỉ cần chạy file kết quả bằng Python như bình thường:
+### 2. Sử dụng qua dòng lệnh (CLI)
 
 ```bash
-python your_script_obf.py
+# Obfuscate 1 file đơn lẻ
+python main.py -i input.py -o output.py -l extreme
+
+# Obfuscate với biến đổi tên sang ký tự CJK Unicode
+python main.py -i input.py -o output.py --cjk
+
+# Obfuscate nguyên một folder dự án
+python main.py -i my_project/ -o my_project_whiscat/
 ```
 
-Không yêu cầu cài thêm bất kỳ thư viện ngoài nào (100% Zero Dependency).
+### 3. Chạy file đã bảo vệ
 
----
-
-### 3. Sử dụng dưới dạng Python Library
-
-```python
-from src.core import Obfuscator, ObfuscationConfig
-
-# Sử dụng cấu hình preset
-config = ObfuscationConfig.preset_extreme()
-obfuscator = Obfuscator(config)
-
-# Làm mờ file
-obfuscator.obfuscate_file("input.py", "output.py")
-
-# Hoặc làm mờ trực tiếp chuỗi code
-protected_code = obfuscator.obfuscate_code("print('Hello World')")
-```
-
----
-
-## 🧪 Kiểm thử (Testing)
-
-Chạy bộ test tự động để xác minh tính toàn vẹn và độ chính xác của output qua tất cả các cấp độ:
-
+File kết quả chạy trực tiếp và hoàn toàn độc lập (Zero-Dependency):
 ```bash
-python tests/test_obfuscator.py
+python output.py
 ```
