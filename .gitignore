@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+*.so
+.pytest_cache/
+build/
+dist/
+*.egg-info/
+.venv/
+venv/
+.env
+dist/
+output_*.py
+*_obf.py
+*_protected.py
