@@ -34,10 +34,10 @@ Cực kỳ đơn giản, chỉ cần chỉ định file `.py` cần làm mờ:
 
 ```bash
 # Obfuscate với mức độ mặc định (HIGH)
-python obfuscate.py -i your_script.py -o your_script_obf.py
+python main.py -i your_script.py -o your_script_obf.py
 
 # Obfuscate với mức độ tối đa (EXTREME)
-python obfuscate.py -i your_script.py -o your_script_obf.py -l extreme
+python main.py -i your_script.py -o your_script_obf.py -l extreme
 ```
 
 #### Các mức độ (Presets):
