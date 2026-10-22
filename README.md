@@ -23,12 +23,17 @@ Một công cụ làm mờ (Obfuscator) và bảo vệ mã nguồn Python toàn 
    - **Anti-Tracing & Anti-Debugger**: Phát hiện `gettrace`, chặn `settrace`, vô hiệu hóa debugger Windows API (`IsDebuggerPresent`, `CheckRemoteDebuggerPresent`).
    - Tự động dọn dẹp frame và loader trong bộ nhớ ngay sau khi thực thi.
 
-4. **🚀 4-Tier Polymorphic Packing**:
+4. **🎨 TDIH ASCII Art Mode (Độc quyền)**:
+   - Toàn bộ file output được tạo hình bằng **ASCII Art Banner TDIH**.
+   - Mọi biến, hàm, và toàn bộ dữ liệu payload được mã hóa hoàn toàn bằng 4 chữ cái `t`, `d`, `i`, `h`.
+   - Vừa bảo mật cao vừa mang dấu ấn thương hiệu `tdih`.
+
+5. **🚀 4-Tier Polymorphic Packing**:
    - Nén bytecode qua 4 tầng: `BZ2` + `LZMA` + `ZLIB` + `Base85`.
    - Mã hóa luồng Rolling Stream Cipher với seed, key và salt ngẫu nhiên mỗi lần obf.
    - Đóng gói trong loader tự giải mã đa hình (Polymorphic Self-Executing Loader).
 
-5. **📂 Batch Folder Obfuscation**:
+6. **📂 Batch Folder Obfuscation**:
    - Hỗ trợ kéo thả hoặc nhập đường dẫn nguyên cả thư mục dự án -> Tự động xử lý và bảo vệ toàn bộ cây thư mục.
 
 ---
@@ -43,19 +48,23 @@ python main.py
 ```
 Menu tương tác với dải màu Gradient sẽ xuất hiện:
 ```text
-    [1] ⚡ Quick Obfuscate (Mã hóa nhanh 1 File Python)
-    [2] 🥷 Stealth Matrix Mode (Chế độ ẩn danh 2D Matrix & CJK)
-    [3] 🛡️ Whiscat Ultimate Armor (Full Anti-Decompile + Memory Guard + 4-Tier Packing)
-    [4] 📂 Batch Obfuscate Project (Bảo vệ toàn bộ Folder / Dự án)
-    [5] 🧪 Run Self-Diagnostic Tests (Chạy kiểm tra tính đúng đắn)
+    [1] ⚡ Commercial Clean Shield (Nhanh, Sạch Antivirus, Khởi động tức thì)
+    [2] 🥷 Ultra Paranoid Shield (Chống Debugger, RAM Hook, 4-Tier Packing)
+    [3] 🐾 WHISCAT NEO-GHOST CHAOS (TỐI THƯỢNG: 40k+ Spaces Flood, Matrix Chunks, SHA-256 Lock)
+    [4] 🎨 TDIH ASCII ART OBF (Full Code Chữ TDIH / TDINH + ASCII Art)
+    [5] 📂 Batch Obfuscate Project (Bảo vệ toàn bộ Folder / Dự án)
+    [6] 🧪 Self-Diagnostic Test (Chạy kiểm tra tự động)
     [0] 🚪 Thoát
 ```
 
 ### 2. Sử dụng qua dòng lệnh (CLI)
 
 ```bash
-# Obfuscate 1 file đơn lẻ
-python main.py -i input.py -o output.py -l extreme
+# Obfuscate theo chế độ TDIH ASCII Art
+python main.py -i input.py -o output.py -m 4
+
+# Obfuscate theo chế độ Neo-Ghost Chaos (Tối thượng)
+python main.py -i input.py -o output.py -m 3
 
 # Obfuscate với biến đổi tên sang ký tự CJK Unicode
 python main.py -i input.py -o output.py --cjk

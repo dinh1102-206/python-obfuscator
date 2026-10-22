@@ -744,6 +744,55 @@ __sig__ = "{PLACEHOLDER_SIG}"
 
 
 # =============================================================================
+# 🎨 MODE 4: TDIH ASCII ART OBF (FULL CODE = CHỮ TDIH + ASCII ART)
+# =============================================================================
+
+def build_mode4_tdih_ascii_payload(source_str: str) -> str:
+    """Chế độ 4: TDIH ASCII ART OBF (Full Code = Chữ TDIH / TDINH + ASCII Art)."""
+    raw_bytes = source_str.encode("utf-8")
+    comp = zlib.compress(raw_bytes, level=9)
+    num = int.from_bytes(comp, "big")
+
+    alph = "tdih"
+    digits = []
+    while num > 0:
+        digits.append(alph[num % 4])
+        num //= 4
+    enc_str = "".join(reversed(digits))
+
+    chunk_size = 72
+    chunks = [enc_str[i:i + chunk_size] for i in range(0, len(enc_str), chunk_size)]
+    formatted_chunks = "\n    ".join(f'"{c}"' for c in chunks)
+
+    ascii_banner = r'''"""
+  ████████╗██████╗ ██╗██╗  ██╗    ██████╗ ██████╗ ███████╗
+  ╚══██╔══╝██╔══██╗██║██║  ██║   ██╔═══██╗██╔══██╗██╔════╝
+     ██║   ██║  ██║██║███████║   ██║   ██║██████╔╝█████╗  
+     ██║   ██║  ██║██║██╔══██║   ██║   ██║██╔══██╗██╔══╝  
+     ██║   ██████╔╝██║██║  ██║   ╚██████╔╝██████╔╝██║     
+     ╚═╝   ╚═════╝ ╚═╝╚═╝  ╚═╝    ╚═════╝ ╚═════╝ ╚═╝     
+                     🐾 TDIH OBFUSCATOR 🐾
+"""'''
+
+    code = f'''# -*- coding: utf-8 -*-
+{ascii_banner}
+
+tdih_tdih = __import__('zlib')
+tdih_tdih_tdih = (
+    {formatted_chunks}
+)
+tdih_alph = 'tdih'
+_tdih_val_ = 0
+for _tdih_ch_ in tdih_tdih_tdih:
+    _tdih_val_ = (_tdih_val_ << 2) + tdih_alph.index(_tdih_ch_)
+_tdih_blen_ = (_tdih_val_.bit_length() + 7) // 8
+_tdih_exec_ = getattr(__import__('builtins'), 'exec')
+_tdih_exec_(tdih_tdih.decompress(_tdih_val_.to_bytes(_tdih_blen_, 'big')), globals())
+'''
+    return code.strip()
+
+
+# =============================================================================
 # 🛡️ MODE 2: ULTRA PARANOID APEX MATRIX SHIELD
 # =============================================================================
 
@@ -782,8 +831,10 @@ def obfuscate_python_code(source_code: str, mode: int = 3) -> str:
     except Exception:
         pass
 
-    # 2. Packing into Apex Shield
-    if mode == 3:
+    # 2. Packing into selected mode
+    if mode == 4:
+        return build_mode4_tdih_ascii_payload(source_code)
+    elif mode == 3:
         return build_mode3_ghost_payload(source_code)
     elif mode == 2:
         return build_mode2_paranoid_payload(source_code)
@@ -843,19 +894,20 @@ def interactive_menu():
     [1] ⚡ Commercial Clean Shield (Nhanh, Sạch Antivirus, Khởi động tức thì)
     [2] 🥷 Ultra Paranoid Shield (Chống Debugger, RAM Hook, 4-Tier Packing)
     [3] 🐾 WHISCAT NEO-GHOST CHAOS (TỐI THƯỢNG: 40k+ Spaces Flood, Matrix Chunks, SHA-256 Lock)
-    [4] 📂 Batch Obfuscate Project (Bảo vệ toàn bộ Folder / Dự án)
-    [5] 🧪 Self-Diagnostic Test (Chạy kiểm tra tự động)
+    [4] 🎨 TDIH ASCII ART OBF (Full Code Chữ TDIH / TDINH + ASCII Art)
+    [5] 📂 Batch Obfuscate Project (Bảo vệ toàn bộ Folder / Dự án)
+    [6] 🧪 Self-Diagnostic Test (Chạy kiểm tra tự động)
     [0] 🚪 Thoát
     """
     print(grad(menu_text, "blue_to_cyan"))
 
-    choice = input(" [🐾] Chọn chế độ (0-5): ").strip()
+    choice = input(" [🐾] Chọn chế độ (0-6): ").strip()
 
     if choice == "0":
         print("\n [!] Tạm biệt!")
         sys.exit(0)
 
-    elif choice in {"1", "2", "3"}:
+    elif choice in {"1", "2", "3", "4"}:
         in_path = clean_input_path(input("\n [?] Nhập đường dẫn file .py cần obf: "))
         if not os.path.isfile(in_path):
             print(f" [!] Lỗi: Không tìm thấy file '{in_path}'!")
@@ -864,10 +916,12 @@ def interactive_menu():
         out_path = clean_input_path(input(" [?] Nhập đường dẫn lưu file (Enter để tự động tạo): "))
         if not out_path:
             p = Path(in_path)
-            out_path = str(p.with_name(f"{p.stem}_whiscat.py"))
+            tag_name = "tdih" if choice == "4" else "whiscat"
+            out_path = str(p.with_name(f"{p.stem}_{tag_name}.py"))
 
         mode_val = int(choice)
-        print(f"\n [*] Đang làm mờ với Whiscat Apex Engine (Mode {mode_val})...")
+        mode_names = {1: "Commercial", 2: "Ultra Paranoid", 3: "Neo-Ghost Chaos", 4: "TDIH ASCII Art"}
+        print(f"\n [*] Đang làm mờ với Whiscat Apex Engine ({mode_names[mode_val]})...")
         t0 = time.time()
         obfuscate_file(in_path, out_path, mode=mode_val)
         ms = (time.time() - t0) * 1000
@@ -877,7 +931,7 @@ def interactive_menu():
         print(f" [✓] Kích thước: {os.path.getsize(out_path):,} bytes")
         print(f" [✓] Chạy đơn giản bằng: python \"{Path(out_path).name}\"\n")
 
-    elif choice == "4":
+    elif choice == "5":
         in_dir = clean_input_path(input("\n [?] Nhập đường dẫn thư mục dự án: "))
         if not os.path.isdir(in_dir):
             print(f" [!] Lỗi: Không tìm thấy thư mục '{in_dir}'!")
@@ -887,15 +941,15 @@ def interactive_menu():
         if not out_dir:
             out_dir = str(Path(in_dir).parent / f"{Path(in_dir).name}_whiscat")
 
-        mode_choice = input(" [?] Chọn chế độ (1: Commercial, 2: Paranoid, 3: Neo-Ghost) [Mặc định 3]: ").strip()
-        mode_val = int(mode_choice) if mode_choice in {"1", "2", "3"} else 3
+        mode_choice = input(" [?] Chọn chế độ (1: Commercial, 2: Paranoid, 3: Neo-Ghost, 4: TDIH ASCII) [Mặc định 4]: ").strip()
+        mode_val = int(mode_choice) if mode_choice in {"1", "2", "3", "4"} else 4
 
         print(f"\n [*] Đang xử lý toàn bộ dự án với Mode {mode_val}...")
         total = obfuscate_folder(in_dir, out_dir, mode=mode_val)
         print(grad(f"\n [✓] Đã bảo vệ thành công {total} files trong dự án!", "cyan_to_green"))
         print(f" [✓] Thư mục kết quả: {out_dir}\n")
 
-    elif choice == "5":
+    elif choice == "6":
         print("\n [*] Đang chạy kiểm thử tích hợp...")
         run_diagnostics()
 
@@ -917,8 +971,9 @@ print("Sum is:", r)
     tmp_out = "temp_diag_output.py"
     try:
         Path(tmp_in).write_text(test_src, encoding="utf-8")
-        obfuscate_file(tmp_in, tmp_out, mode=3)
-        print(f" [+] Generated Whiscat Neo-Ghost file size: {os.path.getsize(tmp_out):,} bytes")
+        # Test Mode 4 (TDIH ASCII)
+        obfuscate_file(tmp_in, tmp_out, mode=4)
+        print(f" [+] Generated TDIH ASCII file size: {os.path.getsize(tmp_out):,} bytes")
         
         # Test running directly with subprocess
         res = subprocess.run([sys.executable, tmp_out], capture_output=True, text=True)
@@ -944,7 +999,7 @@ def parse_cli():
     parser = argparse.ArgumentParser(description="WHISCAT OBFUSCATOR v9.0 - APEX PROTECTOR")
     parser.add_argument("-i", "--input", help="Source Python file or project folder")
     parser.add_argument("-o", "--output", help="Destination file or folder")
-    parser.add_argument("-m", "--mode", type=int, choices=[1, 2, 3], default=3, help="Protection Mode: 1 (Clean), 2 (Paranoid), 3 (Neo-Ghost Chaos)")
+    parser.add_argument("-m", "--mode", type=int, choices=[1, 2, 3, 4], default=4, help="Protection Mode: 1 (Clean), 2 (Paranoid), 3 (Neo-Ghost Chaos), 4 (TDIH ASCII Art)")
     return parser.parse_args()
 
 
