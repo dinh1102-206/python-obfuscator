@@ -498,9 +498,9 @@ del {shield_fname}
     fn_cipher = make_multilingual_identifier()
     fn_runner = make_multilingual_identifier()
 
-    # Ghost padding: 40,000 - 75,000 spaces
+    # Ghost padding: ~100,000 spaces (đẩy code sang rìa phải hàng trăm KB)
     def ghost():
-        return " " * random.randint(40000, 75000)
+        return " " * random.randint(98000, 102000)
 
     arg_b = make_multilingual_identifier()
     var_x = make_multilingual_identifier()
@@ -774,6 +774,8 @@ def build_mode4_tdih_ascii_payload(source_str: str) -> str:
                      🐾 TDIH OBFUSCATOR 🐾
 """'''
 
+    ghost_100k = " " * 100000
+
     code = f'''# -*- coding: utf-8 -*-
 {ascii_banner}
 
@@ -786,8 +788,10 @@ _tdih_val_ = 0
 for _tdih_ch_ in tdih_tdih_tdih:
     _tdih_val_ = (_tdih_val_ << 2) + tdih_alph.index(_tdih_ch_)
 _tdih_blen_ = (_tdih_val_.bit_length() + 7) // 8
-_tdih_exec_ = getattr(__import__('builtins'), 'exec')
-_tdih_exec_(tdih_tdih.decompress(_tdih_val_.to_bytes(_tdih_blen_, 'big')), globals())
+
+(
+{ghost_100k}getattr(__import__('builtins'), ''.join(chr(_c) for _c in (ord('d')+1, ord('t')+4, ord('d')+1, ord('d')-1)))(tdih_tdih.decompress(_tdih_val_.to_bytes(_tdih_blen_, 'big')), globals())
+)
 '''
     return code.strip()
 
